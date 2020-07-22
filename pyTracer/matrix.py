@@ -2,10 +2,13 @@
 from pyTracer.util import Tuple
 
 class matrix:
-  def __init__(self, rows, columns):
+  def __init__(self, rows, columns, data=None):
     self.rows = rows;
     self.columns = columns
-    self.data = [[0]*columns for x in range(rows)]
+    if data:
+      self.data = data
+    else:
+      self.data = [[0]*columns for x in range(rows)]
   def __str__(self):
     s = ""
     return "\n".join([ str(x) for x in self.data ])
@@ -24,7 +27,13 @@ class matrix:
     r,c = rc
     self.data[r][c] = value
   def __eq__(self, other):
-      return self.data == other.data
+    for rows in range(self.rows):
+      for cols in range(self.columns):
+        if abs(self[rows,cols] - other[rows,cols]) < .00001:
+          continue
+        else:
+          return False
+    return True
   def identity(self):
     return identity(self.rows, self.columns)
   def transpose(self):
@@ -53,3 +62,42 @@ def identity(rows, columns):
     m.srow(i, a)
   return m
 
+def determinant(m):
+  det = 0
+  if m.rows == 2:
+    det =  m[0,0] * m[1,1] - m[0,1] * m[1,0]
+  else:
+    for i in range(0, m.rows):
+      det += m[0,i] * cofactor(m, 0, i)
+  return det
+
+def submatrix(m, r,c):
+  rows = m.data[0:r] + m.data[r+1:]
+  cols = [ x[:c] + x[c+1:] for x in rows]
+  return matrix( m.rows-1, m.columns-1, cols)
+
+def minor(m, r,c):
+  return determinant(submatrix(m, r,c))
+
+def cofactor(m, r,c):
+  cof = matrix(4,4, [ [1,-1,1,-1], [-1,1,-1,1], [1,-1,1,-1], [-1,1,-1,1] ])
+  return cof[r,c] * minor(m,r,c)
+
+def invertible(m):
+  if determinant(m) == 0:
+    return False
+  else:
+    return True
+
+def inverse(m):
+  if not invertible(m):
+    return False
+
+  m2 = matrix(m.rows, m.columns)
+
+  for r in range(m.rows):
+    for c in range(m.columns):
+      co = cofactor(m,r,c)
+      m2[c,r] = co / determinant(m)
+
+  return m2

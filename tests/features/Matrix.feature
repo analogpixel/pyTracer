@@ -92,3 +92,106 @@ Feature: Matrix
     Given I ← transpose(identity_matrix)
     Then I = identity_matrix
 
+  Scenario: Calculating the determinant of a 2x2 matrix
+    Given the following 2x2 matrix J:
+      |  1 | 5 |
+      | -3 | 2 |
+    Then determinant(J) = 17
+
+  Scenario: A submatrix of a 3x3 matrix is a 2x2 matrix
+    Given the following 3x3 matrix K:
+      |  1 | 5 |  0 |
+      | -3 | 2 |  7 |
+      |  0 | 6 | -3 |
+    Then submatrix(K, 0, 2) is the following 2x2 matrix:
+      | -3 | 2 |
+      |  0 | 6 |
+
+  Scenario: A submatrix of a 4x4 matrix is a 3x3 matrix
+    Given the following 4x4 matrix L:
+      | -6 |  1 |  1 |  6 |
+      | -8 |  5 |  8 |  6 |
+      | -1 |  0 |  8 |  2 |
+      | -7 |  1 | -1 |  1 |
+    Then submatrix(L, 2, 1) is the following 3x3 matrix:
+      | -6 |  1 | 6 |
+      | -8 |  8 | 6 |
+      | -7 | -1 | 1 |
+
+  Scenario: Calculating a minor of a 3x3 matrix
+    Given the following 3x3 matrix M:
+        |  3 |  5 |  0 |
+        |  2 | -1 | -7 |
+        |  6 | -1 |  5 |
+      And N ← submatrix(M, 1, 0)
+    Then determinant(N) = 25
+    And minor(M, 1, 0) = 25
+
+  Scenario: Calculating a cofactor of a 3x3 matrix
+    Given the following 3x3 matrix P:
+        |  3 |  5 |  0 |
+        |  2 | -1 | -7 |
+        |  6 | -1 |  5 |
+    Then minor(P, 0, 0) = -12
+      And cofactor(P, 0, 0) = -12
+      And minor(P, 1, 0) = 25
+      And cofactor(P, 1, 0) = -25
+
+  Scenario: Calculating the determinant of a 3x3 matrix
+    Given the following 3x3 matrix Q:
+      |  1 |  2 |  6 |
+      | -5 |  8 | -4 |
+      |  2 |  6 |  4 |
+    Then cofactor(Q, 0, 0) = 56
+      And cofactor(Q, 0, 1) = 12
+      And cofactor(Q, 0, 2) = -46
+      And determinant(Q) = -196
+
+  Scenario: Calculating the determinant of a 4x4 matrix
+    Given the following 4x4 matrix Q:
+      | -2 | -8 |  3 |  5 |
+      | -3 |  1 |  7 |  3 |
+      |  1 |  2 | -9 |  6 |
+      | -6 |  7 |  7 | -9 |
+    Then cofactor(Q, 0, 0) = 690
+      And cofactor(Q, 0, 1) = 447
+      And cofactor(Q, 0, 2) = 210
+      And cofactor(Q, 0, 3) = 51
+      And determinant(Q) = -4071
+
+  Scenario: Testing an invertible matrix for invertibility
+    Given the following 4x4 matrix R:
+      |  6 |  4 |  4 |  4 |
+      |  5 |  5 |  7 |  6 |
+      |  4 | -9 |  3 | -7 |
+      |  9 |  1 |  7 | -6 |
+    Then determinant(R) = -2120
+      And R is invertible
+
+  Scenario: Testing a noninvertible matrix for invertibility
+    Given the following 4x4 matrix S:
+      | -4 |  2 | -2 | -3 |
+      |  9 |  6 |  2 |  6 |
+      |  0 | -5 |  1 | -5 |
+      |  0 |  0 |  0 |  0 |
+    Then determinant(S) = 0
+    And S is not invertible
+
+  Scenario: Calculating the inverse of a matrix
+    Given the following 4x4 matrix T:
+        | -5 |  2 |  6 | -8 |
+        |  1 | -5 |  1 |  8 |
+        |  7 |  7 | -6 | -7 |
+        |  1 | -3 |  7 |  4 |
+      And U ← inverse(T)
+    Then determinant(T) = 532
+      And cofactor(T, 2, 3) = -160
+      And U[3,2] = -160/532
+      And cofactor(T, 3, 2) = 105
+      And U[2,3] = 105/532
+      And U is the following 4x4 matrix:
+        |  0.21805 |  0.45113 |  0.24060 | -0.04511 |
+        | -0.80827 | -1.45677 | -0.44361 |  0.52068 |
+        | -0.07895 | -0.22368 | -0.05263 |  0.19737 |
+        | -0.52256 | -0.81391 | -0.30075 |  0.30639 |
+

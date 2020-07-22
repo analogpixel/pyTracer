@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 
 from pyTracer.canvas import canvas
 from pyTracer.util import color,Tuple
-from pyTracer.matrix import matrix,identity
+from pyTracer.matrix import *
 
 @given(u'the following 4x4 matrix M')
 def step_impl(context):
@@ -146,3 +146,174 @@ def step_impl(context):
 @then(u'I = identity_matrix')
 def step_impl(context):
   assert context.I == identity(4,4)
+
+@given(u'the following 2x2 matrix J')
+def step_impl(context):
+  context.J = matrix(2,2)
+  context.J.data = [ [1,5], [-3,2] ]
+
+@then(u'determinant(J) = 17')
+def step_impl(context):
+  assert determinant(context.J) == 17
+
+@given(u'the following 3x3 matrix K')
+def step_impl(context):
+  context.K = matrix(3,3)
+  context.K.data = [ [1,5,0], [-3,2,7], [0,6,-3] ]
+
+@then(u'submatrix(K, 0, 2) is the following 2x2 matrix')
+def step_impl(context):
+  assert submatrix(context.K, 0,2) == matrix(2,2, [ [-3,2], [0,6] ])
+
+@given(u'the following 4x4 matrix L')
+def step_impl(context):
+  context.L = matrix(4,4, [[-6,1,1,6],[-8,5,8,6],[-1,0,8,2], [-7,1,-1,1]])
+
+@then(u'submatrix(L, 2, 1) is the following 3x3 matrix')
+def step_impl(context):
+  assert submatrix(context.L, 2,1) ==  matrix(3,3, [[-6,1,6],[-8,8,6],[-7,-1,1]]) 
+
+@given(u'the following 3x3 matrix M')
+def step_impl(context):
+  context.M = matrix(3,3, [[2,5,0],[2,-1,-7],[6,-1,5]])
+
+@given(u'N ← submatrix(M, 1, 0)')
+def step_impl(context):
+  context.N = submatrix(context.M, 1,0)
+
+@then(u'determinant(N) = 25')
+def step_impl(context):
+   assert determinant(context.N) == 25 
+
+@then(u'minor(M, 1, 0) = 25')
+def step_impl(context):
+  assert minor(context.M, 1,0) == 25
+
+@given(u'the following 3x3 matrix P')
+def step_impl(context):
+  context.P = matrix(3,3, [[3,5,0],[2,-1,-7],[6,-1,5]])
+
+@then(u'minor(P, 0, 0) = -12')
+def step_impl(context):
+  assert minor(context.P, 0,0) == -12
+
+@then(u'cofactor(P, 0, 0) = -12')
+def step_impl(context):
+  print("cofactor:", cofactor(context.P, 0,0) )
+  assert cofactor(context.P,0,0) == -12
+
+@then(u'minor(P, 1, 0) = 25')
+def step_impl(context):
+  assert minor(context.P,1,0) == 25
+
+@then(u'cofactor(P, 1, 0) = -25')
+def step_impl(context):
+  assert cofactor(context.P,1,0) == -25
+
+@given(u'the following 3x3 matrix Q')
+def step_impl(context):
+  context.Q = matrix(3,3, [[1,2,6],[-5,8,-4],[2,6,4]])
+
+@then(u'cofactor(Q, 0, 0) = 56')
+def step_impl(context):
+  assert cofactor(context.Q, 0,0) == 56
+
+@then(u'cofactor(Q, 0, 1) = 12')
+def step_impl(context):
+  assert cofactor(context.Q, 0,1) == 12
+
+@then(u'cofactor(Q, 0, 2) = -46')
+def step_impl(context):
+  assert cofactor(context.Q, 0,2) == -46
+
+@then(u'determinant(Q) = -196')
+def step_impl(context):
+  assert determinant(context.Q) == -196
+
+@given(u'the following 4x4 matrix Q')
+def step_impl(context):
+  context.Q = matrix(4,4, [[-2,-8,3,5],[-3,1,7,3],[1,2,-9,6],[-6,7,7,-9]])
+
+@then(u'cofactor(Q, 0, 0) = 690')
+def step_impl(context):
+  print(cofactor(context.Q, 0,0))
+  assert cofactor(context.Q,0,0) == 690
+
+@then(u'cofactor(Q, 0, 1) = 447')
+def step_impl(context):
+  assert cofactor(context.Q, 0,1) == 447
+
+@then(u'cofactor(Q, 0, 2) = 210')
+def step_impl(context):
+  assert cofactor(context.Q, 0,2) == 210
+
+@then(u'cofactor(Q, 0, 3) = 51')
+def step_impl(context):
+  assert cofactor(context.Q, 0,3) == 51
+
+@then(u'determinant(Q) = -4071')
+def step_impl(context):
+  assert determinant(context.Q) == -4071
+
+@given(u'the following 4x4 matrix R')
+def step_impl(context):
+  context.R = matrix(4,4, [[6,4,4,4],[5,5,7,6],[4,-9,3,-7],[9,1,7,-6]])
+
+@then(u'determinant(R) = -2120')
+def step_impl(context):
+  assert determinant(context.R) == -2120
+
+@then(u'R is invertible')
+def step_impl(context):
+  assert invertible(context.R)
+
+@given(u'the following 4x4 matrix S')
+def step_impl(context):
+  context.S = matrix(4,4, [[-4,2,-2,-3], [9,6,2,6], [0,-5,1,-5], [0,0,0,0] ])
+
+@then(u'determinant(S) = 0')
+def step_impl(context):
+  assert determinant(context.S) == 0
+
+@then(u'S is not invertible')
+def step_impl(context):
+  assert not invertible(context.S)
+
+@given(u'the following 4x4 matrix T')
+def step_impl(context):
+  context.T = matrix(4,4, [[-5,2,6,-8],[1,-5,1,8],[7,7,-6,-7],[1,-3,7,4]])
+
+@given(u'U ← inverse(T)')
+def step_impl(context):
+  context.U = inverse(context.T)
+
+@then(u'determinant(T) = 532')
+def step_impl(context):
+  assert determinant(context.T) == 532
+
+@then(u'cofactor(T, 2, 3) = -160')
+def step_impl(context):
+  assert cofactor(context.T, 2,3) == -160
+
+@then(u'U[3,2] = -160/532')
+def step_impl(context):
+  assert context.U[3,2] == -160/532
+
+@then(u'cofactor(T, 3, 2) = 105')
+def step_impl(context):
+  assert cofactor(context.T, 3,2) == 105
+
+@then(u'U[2,3] = 105/532')
+def step_impl(context):
+  assert context.U[2,3] == 105/532
+
+@then(u'U is the following 4x4 matrix')
+def step_impl(context):
+  print(context.T)
+  print(context.U)
+  assert context.U == matrix(4,4, [
+                                  [0.21805 ,  0.45113 ,  0.24060 , -0.04511], 
+                                  [-0.80827,-1.45677,-0.44361,0.52068],
+                                  [-0.07895 , -0.22368 , -0.05263 ,  0.19737],
+                                  [-0.52256 , -0.81391 , -0.30075 ,  0.30639 ]])
+
