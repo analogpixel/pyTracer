@@ -2,23 +2,31 @@ from .util import color
 
 class canvas:
   maxColors = 256
+  x_offset = 0
+  y_offset = 0
 
   def __init__(self, width, height):
     self.width = width
     self.height = height
     self.data = [color(0,0,0)] * width * height
 
+  def pset(self,p,c):
+    self.set(p.x, p.y, c)
+
   def set(self,x,y,c):
-    x = int(x)
-    y = int(y)
+    x = int(x) + self.x_offset
+    y = int(y) + self.y_offset
     if x > self.width or x < 0 or y > self.height or y < 0:
       return
  
     self.data[ x + y * self.width] = c
 
+  def pget(self, p):
+    return self.get(p.x, p.y)
+
   def get(self,x,y):
-    x = int(x)
-    y = int(y)
+    x = int(x) + self.x_offset
+    y = int(y) + self.y_offset
     if x > self.width or x < 0 or y > self.height or y < 0:
       return
 
