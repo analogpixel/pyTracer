@@ -17,7 +17,7 @@ p  = point(1, 0,0)
 
 r = rotation_z(math.pi/6)
 s = scaling(100,10,10)
-t = translation(200,200)
+t  = translation(200,200)
 
 p = t * s * p
 for i in range(12):
