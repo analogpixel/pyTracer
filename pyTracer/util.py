@@ -53,6 +53,26 @@ def point(x,y,z):
 def vector(x,y,z):
   return( Tuple(x,y,z,0.0) )
 
+class intersection:
+  def __init__(self, t, obj):
+    self.t = t
+    self.obj = obj
+
+class intersections:
+  def __init__(self, *argv):
+    self.intersectionList = list(argv)
+    self.sort()
+  def sort(self):
+    sorted(self.intersectionList, key=lambda x: x.t)
+  def append(self,*inter):
+    self.intersectionList += list(inter)
+  def hit(self):
+    self.sort()
+    for i in range(len(self.intersectionList)):
+        if self.intersectionList[i].t >=0:
+          return self.intersectionList[i]
+    return []
+
 class color():
   def __init__(self,r,g,b,a=1):
     self.red = r
